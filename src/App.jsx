@@ -1,68 +1,21 @@
-import { DataGrid } from "@mui/x-data-grid";
-import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import "./App.css";
+import Topbar from "./Component/Topbar";
 
 function App() {
-  const [product, setProduct] = useState();
-  const [row, setRow] = useState();
+  const [product, setProduct] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // const queryClient = useQuery({
   //   queryKey: ["product"],
   //   queryFn: () => {},
   // });
-  const dummy = [
-    {
-      id: 1,
-      name: "Jon Snow",
-      email: "jonsnow@gmail.com",
-      age: 35,
-      phone: "(665)121-5454",
-      address: "0912 Won Street, Alabama, SY 10001",
-      city: "New York",
-      zipCode: "10001",
-      registrarId: 123512,
-    },
-  ];
-
-  const columns = [
-    { field: "id", headerName: "ID" },
-    { field: "registrarId", headerName: "Registered Id" },
-    {
-      field: "name",
-      headerName: "Name",
-      // flex: 1,
-      cellClassName: "name-column--cell",
-    },
-    { field: "email", headerName: "Email" },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      headerAlign: "left",
-      align: "left",
-    },
-    {
-      field: "phone",
-      type: "number",
-      // flex: 2,
-      headerName: "Phone",
-      headerAlign: "left",
-      align: "left",
-      hideable: false,
-    },
-    { field: "address", headerName: "Address", flex: 1 },
-    {
-      field: "city",
-      headerName: "City",
-      // flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    { field: "zipCode", headerName: "ZipCode" },
-  ];
 
   const fetchProductTable = () => {
+    setLoading(true);
     fetch("https://product-fhqo.onrender.com/products", {
       method: "GET",
     })
@@ -71,9 +24,10 @@ function App() {
       })
       .then(res => {
         const value = res;
-
-        setProduct(value);
-        console.log(product, "p");
+        setProduct(value.products);
+        setCategory(value.product_categories);
+        setStatus(value.product_status);
+        setLoading(false);
       });
   };
 
@@ -82,18 +36,48 @@ function App() {
   }, []);
 
   return (
-    <Box
-      m="20px"
-      display="flex"
-      justifyContent="center"
-      alignItem="center"
-      border="1px solid red"
-      padding='5px'
-    >
-      <Box height="75vh" border="1px solid green" width="100%">
-        <DataGrid rows={dummy} columns={columns} />
-      </Box>
-    </Box>
+    <>
+      <section className="main-container">
+        <h4>This is CRUD</h4>
+        <div className="top-bar">
+          <button className="add-btn">Add a new Product</button>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search Products"
+          />
+        </div>
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Created At</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>195</td>
+                <td>Cheese Ball</td>
+                <td>Dairy</td>
+                <td>Description</td>
+                <td>2023-02-02</td>
+                <td>in_stock</td>
+                <td>
+                  <button className="btn">Edit</button>
+                  <button className="btn">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </>
   );
 }
 
