@@ -4,7 +4,7 @@ import "./App.css";
 import Popup from "./Component/Popup/Popup";
 import { ConfirmationNumber } from "@mui/icons-material";
 import Confirmation from "./Component/Confirmation/Confirmation";
-import AddProduct from "./Component/AddProduct/AddProduct";
+import ModalItem from "./Component/ModalItem/ModalItem";
 
 function App() {
   const [product, setProduct] = useState([]);
@@ -16,10 +16,10 @@ function App() {
 
   //config for Modal
   const createConfig = (type, id) => {
-    let configs = {};
+    let modalConfigs = {};
     switch (type) {
       case "delete":
-        configs = {
+        modalConfigs = {
           title: "Confirm Delete",
           close: handleModalClose,
           component: (
@@ -34,11 +34,11 @@ function App() {
         };
         break;
       case "add":
-        configs = {
-          title: "Add product",
+        modalConfigs = {
+          title: "Add New product",
           close: handleModalClose,
           component: (
-            <AddProduct
+            <ModalItem
               config={{
                 close: handleModalClose,
                 category,
@@ -50,11 +50,11 @@ function App() {
         };
         break;
       case "edit":
-        configs = {
+        modalConfigs = {
           title: "Edit product",
           close: handleModalClose,
           component: (
-            <AddProduct
+            <ModalItem
               config={{
                 close: handleModalClose,
                 category,
@@ -67,7 +67,7 @@ function App() {
         };
         break;
     }
-    setModalConfig(configs);
+    setModalConfig(modalConfigs);
     setShowModal(true);
   };
 
@@ -94,6 +94,7 @@ function App() {
       });
   };
 
+  //function to add new table
   const handleAddNewProduct = data => {
     fetch("https://product-fhqo.onrender.com/products", {
       method: "POST",
@@ -107,7 +108,39 @@ function App() {
       })
       .then(res => {
         fetchProductTable();
-        handlePopupClose();
+        handleModalClose();
+      });
+  };
+
+  //function to edit existing product
+  const handleEdit = (data, id) => {
+    fetch(`https://product-fhqo.onrender.com/products/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        fetchProductTable();
+        handleModalClose();
+      });
+  };
+
+  //function of delete the existing products
+  const handleDelete = id => {
+    fetch(`https://product-fhqo.onrender.com/products/${id}`, {
+      method: "DELETE",
+    })
+      .then(data => {
+        fetchProductTable();
+        handleModalClose();
+      })
+      .catch(res => {
+        console.log("failed");
       });
   };
 
@@ -155,13 +188,13 @@ function App() {
                     <td>
                       <button
                         className="btn"
-                        onClick={() => createConfig("edit")}
+                        onClick={() => createConfig("edit", item.id)}
                       >
                         Edit
                       </button>
                       <button
                         className="btn"
-                        onClick={() => createConfig("delete")}
+                        onClick={() => createConfig("delete", item.id)}
                       >
                         Delete
                       </button>
