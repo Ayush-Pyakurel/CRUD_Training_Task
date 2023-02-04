@@ -1,19 +1,82 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
-import Topbar from "./Component/Topbar";
+import Popup from "./Component/Popup/Popup";
+import { ConfirmationNumber } from "@mui/icons-material";
+import Confirmation from "./Component/Confirmation/Confirmation";
+import AddProduct from "./Component/AddProduct/AddProduct";
 
 function App() {
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
+  const [modalConfig, setModalConfig] = useState({});
   const [status, setStatus] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  // const queryClient = useQuery({
-  //   queryKey: ["product"],
-  //   queryFn: () => {},
-  // });
+  //config for Modal
+  const createConfig = (type, id) => {
+    let configs = {};
+    switch (type) {
+      case "delete":
+        configs = {
+          title: "Confirm Delete",
+          close: handleModalClose,
+          component: (
+            <Confirmation
+              config={{
+                close: handleModalClose,
+                onConfirm: handleDelete,
+                id: id,
+              }}
+            />
+          ),
+        };
+        break;
+      case "add":
+        configs = {
+          title: "Add product",
+          close: handleModalClose,
+          component: (
+            <AddProduct
+              config={{
+                close: handleModalClose,
+                category,
+                status,
+                onConfirm: handleAddNewProduct,
+              }}
+            />
+          ),
+        };
+        break;
+      case "edit":
+        configs = {
+          title: "Edit product",
+          close: handleModalClose,
+          component: (
+            <AddProduct
+              config={{
+                close: handleModalClose,
+                category,
+                status,
+                onConfirm: handleEdit,
+                id,
+              }}
+            />
+          ),
+        };
+        break;
+    }
+    setModalConfig(configs);
+    setShowModal(true);
+  };
 
+  //function to close the modal
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  //function to fetch the products
   const fetchProductTable = () => {
     setLoading(true);
     fetch("https://product-fhqo.onrender.com/products", {
@@ -31,6 +94,23 @@ function App() {
       });
   };
 
+  const handleAddNewProduct = data => {
+    fetch("https://product-fhqo.onrender.com/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        fetchProductTable();
+        handlePopupClose();
+      });
+  };
+
   useEffect(() => {
     fetchProductTable();
   }, []);
@@ -40,7 +120,9 @@ function App() {
       <section className="main-container">
         <h4>This is CRUD</h4>
         <div className="top-bar">
-          <button className="add-btn">Add a new Product</button>
+          <button className="add-btn" onClick={() => createConfig("add")}>
+            Add a new Product
+          </button>
           <input
             type="text"
             className="search-input"
@@ -61,21 +143,42 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>195</td>
-                <td>Cheese Ball</td>
-                <td>Dairy</td>
-                <td>Description</td>
-                <td>2023-02-02</td>
-                <td>in_stock</td>
-                <td>
-                  <button className="btn">Edit</button>
-                  <button className="btn">Delete</button>
-                </td>
-              </tr>
+              {product.length > 0 && !loading ? (
+                product.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.id}</td>
+                    <td>{item.product_name}</td>
+                    <td>{item.category_name}</td>
+                    <td>{item.description}</td>
+                    <td>{item.created_at}</td>
+                    <td>{item.status}</td>
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={() => createConfig("edit")}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn"
+                        onClick={() => createConfig("delete")}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="no-data">
+                    Loading....
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
+        {showModal && <Popup config={modalConfig} />}
       </section>
     </>
   );

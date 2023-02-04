@@ -1,0 +1,27 @@
+.container {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  background: white;
+  border-radius: 5px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid silver;
+}
+
+.close {
+  cursor: pointer;
+}

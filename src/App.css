@@ -6,7 +6,7 @@
 /*outer-controls*/
 .top-bar {
   display: flex;
-  /* flex-wrap: wrap-reverse; */
+  flex-wrap: wrap-reverse;
   justify-content: space-between;
   margin-bottom: 3rem;
 }
