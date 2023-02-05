@@ -29,16 +29,16 @@
   cursor: pointer;
 }
 
-textarea{
+textarea {
   width: 20rem;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 378px) {
   .container {
     width: 90%;
   }
 
-  textarea{
+  textarea {
     width: 18rem;
   }
 }
