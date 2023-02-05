@@ -1,8 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+//react hook import
 import { useEffect, useState } from "react";
+
+//style import
 import "./App.css";
+
+//icon imports
+import { faMagnifyingGlass } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+//component import
 import Popup from "./Component/Popup/Popup";
-import { ConfirmationNumber } from "@mui/icons-material";
 import Confirmation from "./Component/Confirmation/Confirmation";
 import ModalItem from "./Component/ModalItem/ModalItem";
 
@@ -156,11 +163,14 @@ function App() {
           <button className="add-btn" onClick={() => createConfig("add")}>
             Add a new Product
           </button>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search Products"
-          />
+          <div className="input-icon-wrapper">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search Products"
+            />
+          </div>
         </div>
         <div className="table-container">
           <table>
@@ -188,12 +198,14 @@ function App() {
                     <td>
                       <button
                         className="btn"
+                        style={{ backgroundColor: "green" }}
                         onClick={() => createConfig("edit", item.id)}
                       >
                         Edit
                       </button>
                       <button
                         className="btn"
+                        style={{ backgroundColor: "red" }}
                         onClick={() => createConfig("delete", item.id)}
                       >
                         Delete

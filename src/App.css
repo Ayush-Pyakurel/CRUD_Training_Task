@@ -24,12 +24,17 @@
 }
 
 .search-input {
-  border: 1px solid #c4c0c0;
-  border-radius: 5px;
-  padding: 7px;
-  width: 275px;
+  border: none;
+  width: 270px;
   margin-top: 10px;
   outline: none;
+  font-family: "Rubik";
+}
+
+.input-icon-wrapper {
+  border: 2px solid #c4c0c0;
+  border-radius: 5px;
+  padding-left: 0.5rem;
 }
 
 /*table-css*/
