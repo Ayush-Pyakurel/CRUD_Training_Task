@@ -28,3 +28,17 @@
   color: white;
   cursor: pointer;
 }
+
+textarea{
+  width: 20rem;
+}
+
+@media (max-width: 375px) {
+  .container {
+    width: 90%;
+  }
+
+  textarea{
+    width: 18rem;
+  }
+}

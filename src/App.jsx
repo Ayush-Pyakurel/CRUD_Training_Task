@@ -1,11 +1,14 @@
 //react hook import
 import { useEffect, useState } from "react";
 
+//react router-hook import
+import { useSearchParams } from "react-router-dom";
+
 //style import
 import "./App.css";
 
 //icon imports
-import { faMagnifyingGlass } from "@fortawesome/free-regular-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //component import
@@ -14,12 +17,20 @@ import Confirmation from "./Component/Confirmation/Confirmation";
 import ModalItem from "./Component/ModalItem/ModalItem";
 
 function App() {
+  //state hooks to capture api datas
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
-  const [modalConfig, setModalConfig] = useState({});
   const [status, setStatus] = useState([]);
-  const [loading, setLoading] = useState(false);
+
+  //state hook to capture modal/portal values
+  const [modalConfig, setModalConfig] = useState({});
   const [showModal, setShowModal] = useState(false);
+
+  //state hook to capture to loading state
+  const [loading, setLoading] = useState(false);
+
+  //hook to capture search param in url
+  const [searchParams, setSearchParams] = useSearchParams({ search: ''});
 
   //config for Modal
   const createConfig = (type, id) => {
@@ -169,6 +180,7 @@ function App() {
               type="text"
               className="search-input"
               placeholder="Search Products"
+              onChange={e => setSearchParams({ search: e.target.value })}
             />
           </div>
         </div>

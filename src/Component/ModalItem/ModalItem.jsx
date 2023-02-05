@@ -71,7 +71,6 @@ const ModalItem = ({ config }) => {
 
         <label htmlFor="">Description: </label>
         <textarea
-          cols={50}
           rows={5}
           value={formData.description}
           onChange={e =>
