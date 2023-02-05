@@ -30,7 +30,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   //hook to capture search param in url
-  const [searchParams, setSearchParams] = useSearchParams({ search: ''});
+  const [searchParams, setSearchParams] = useSearchParams({ search: "" });
 
   //config for Modal
   const createConfig = (type, id) => {
@@ -169,7 +169,15 @@ function App() {
   return (
     <>
       <section className="main-container">
-        <h4>This is CRUD</h4>
+        <h1
+          style={{
+            fontFamily: "Rubik",
+            filter: "drop-shadow(8px 8px 6px hsl(0, 2%, 45%))",
+            color: "hsl(0, 0%, 22%)",
+          }}
+        >
+          CRUD
+        </h1>
         <div className="top-bar">
           <button className="add-btn" onClick={() => createConfig("add")}>
             Add a new Product

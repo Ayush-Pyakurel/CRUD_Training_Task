@@ -3,6 +3,10 @@ import styleModalItem from "./ModalItem.module.css";
 
 const ModalItem = ({ config }) => {
   const [formData, setFormData] = useState({ created_by: "" });
+  const [loading, setLoading] = useState(false);
+
+  //validation state
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (config.id) {
@@ -10,9 +14,12 @@ const ModalItem = ({ config }) => {
     }
   }, []);
 
+  console.log(formData, "fd");
+
   //function to fetch individual product
-  const fetchProduct = id => {
-    fetch(`https://product-fhqo.onrender.com/products/${id}`, {
+  const fetchProduct = async id => {
+    setLoading(true);
+    await fetch(`https://product-fhqo.onrender.com/products/${id}`, {
       method: "GET",
     })
       .then(res => {
@@ -20,22 +27,29 @@ const ModalItem = ({ config }) => {
       })
       .then(data => {
         setFormData({ ...data, created_by: data.created_by });
+        setLoading(false);
       });
   };
+
   return (
     <div className={styleModalItem.container}>
       <form className={styleModalItem["form-container"]}>
-        <label htmlFor="">Name: </label>
+        <label htmlFor="">Name:<span className={styleModalItem.required}>*</span></label>
         <input
+          className={styleModalItem["product-name"]}
           type="text"
           onChange={({ target }) =>
             setFormData({ ...formData, product_name: target.value })
           }
           value={formData.product_name}
           placeholder="Add product name"
+          required
+          onBlur={console.log("onBlur")}
         />
-
-        <label htmlFor="">Category: </label>
+        {!formData.product_name && error && (
+          <p style={{ margin: 0 }}>Product name is required!</p>
+        )}
+        <label htmlFor="">Category:<span className={styleModalItem.required}>*</span> </label>
         <select
           value={formData.category_name}
           onChange={e =>
@@ -53,7 +67,7 @@ const ModalItem = ({ config }) => {
             ))}
         </select>
 
-        <label htmlFor="">Status: </label>
+        <label htmlFor="">Status:<span className={styleModalItem.required}>*</span> </label>
         <select
           value={formData.status}
           onChange={e => setFormData({ ...formData, status: e.target.value })}
@@ -69,7 +83,7 @@ const ModalItem = ({ config }) => {
             ))}
         </select>
 
-        <label htmlFor="">Description: </label>
+        <label htmlFor="">Description:<span className={styleModalItem.required}>*</span> </label>
         <textarea
           rows={5}
           value={formData.description}
@@ -78,12 +92,28 @@ const ModalItem = ({ config }) => {
           }
         ></textarea>
       </form>
+      {(!formData.product_name ||
+            !formData.category_name ||
+            !formData.description ||
+            !formData.status) && (
+              <p style={{ color: "red", fontFamily: "Rubik", textAlign: 'center'}}>
+                Field with * must be entered!
+              </p>
+            )}
       <div className={styleModalItem["btn-container"]}>
         <button
           className={styleModalItem.btn}
           style={{ background: "#058305" }}
           onClick={() => config.onConfirm(formData, config.id)}
+          disabled={
+            loading ||
+            !formData.product_name ||
+            !formData.category_name ||
+            !formData.description ||
+            !formData.status
+          }
         >
+          
           {config.id ? "Edit" : "Add"}
         </button>
         <button

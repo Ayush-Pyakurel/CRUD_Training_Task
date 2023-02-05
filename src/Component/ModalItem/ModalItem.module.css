@@ -10,6 +10,11 @@
   gap: 5px;
 }
 
+.form-container > *,
+option {
+  font-family: "Rubik";
+}
+
 .btn-container {
   border-top: 1px solid silver;
   margin-top: 1rem;
@@ -31,6 +36,11 @@
 
 textarea {
   width: 20rem;
+  font-family: "Rubik";
+}
+
+.required {
+  color: red;
 }
 
 @media (max-width: 378px) {
@@ -39,6 +49,6 @@ textarea {
   }
 
   textarea {
-    width: 18rem;
+    width: max-content;
   }
 }
