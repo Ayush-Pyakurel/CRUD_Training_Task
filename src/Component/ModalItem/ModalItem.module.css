@@ -15,6 +15,17 @@ option {
   font-family: "Rubik";
 }
 
+.form-container > .product-input {
+  padding: 0.35rem;
+  border: 1px solid hsl(0, 0%, 59%);
+  border-radius: 5px;
+  width: max-content;
+}
+
+.product-input::placeholder {
+  font-family: "Rubik";
+}
+
 .btn-container {
   border-top: 1px solid silver;
   margin-top: 1rem;
@@ -49,6 +60,6 @@ textarea {
   }
 
   textarea {
-    width: max-content;
+    width: 14rem;
   }
 }

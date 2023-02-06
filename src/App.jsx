@@ -16,11 +16,20 @@ import Popup from "./Component/Popup/Popup";
 import Confirmation from "./Component/Confirmation/Confirmation";
 import ModalItem from "./Component/ModalItem/ModalItem";
 
+//react-toastify import
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   //state hooks to capture api datas
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
   const [status, setStatus] = useState([]);
+
+  const [noMatch, setNoMatch] = useState(false);
+
+  //state to capture search input
+  const [search, setSearch] = useState("");
 
   //state hook to capture modal/portal values
   const [modalConfig, setModalConfig] = useState({});
@@ -31,6 +40,31 @@ function App() {
 
   //hook to capture search param in url
   const [searchParams, setSearchParams] = useSearchParams({ search: "" });
+  const searchs = searchParams.get("search");
+
+  useEffect(() => {
+    searchProducts(searchs);
+    setSearch(searchs);
+  }, [searchParams]);
+
+  const searchProducts = string => {
+    if (!string || string === "") {
+      fetchProductTable();
+    } else {
+      let filteredProduct = [];
+      for (let prod of product) {
+        if (
+          prod.product_name.startsWith(string) ||
+          prod.category_name.startsWith(string)
+        ) {
+          filteredProduct.push(prod);
+        } else {
+          setNoMatch(true);
+        }
+      }
+      setProduct(filteredProduct);
+    }
+  };
 
   //config for Modal
   const createConfig = (type, id) => {
@@ -127,6 +161,10 @@ function App() {
       .then(res => {
         fetchProductTable();
         handleModalClose();
+        toast.success("Product added successfully!");
+      })
+      .catch(error => {
+        toast.error(error.message);
       });
   };
 
@@ -145,6 +183,7 @@ function App() {
       .then(res => {
         fetchProductTable();
         handleModalClose();
+        toast.success("Product edit successfully!");
       });
   };
 
@@ -157,8 +196,8 @@ function App() {
         fetchProductTable();
         handleModalClose();
       })
-      .catch(res => {
-        console.log("failed");
+      .catch(err => {
+        toast.error(err);
       });
   };
 
@@ -168,6 +207,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer position="top-center" autoClose={2000} />
       <section className="main-container">
         <h1
           style={{
@@ -206,15 +246,27 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {product.length > 0 && !loading ? (
+              {product.length > 0 ? (
                 product.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.id}</td>
-                    <td>{item.product_name}</td>
-                    <td>{item.category_name}</td>
-                    <td>{item.description}</td>
-                    <td>{item.created_at}</td>
-                    <td>{item.status}</td>
+                    <td style={{ fontFamily: "Rubik", fontSize: "16px" }}>
+                      {item.id}
+                    </td>
+                    <td style={{ fontFamily: "Rubik", fontSize: "16px" }}>
+                      {item.product_name}
+                    </td>
+                    <td style={{ fontFamily: "Rubik", fontSize: "16px" }}>
+                      {item.category_name}
+                    </td>
+                    <td style={{ fontFamily: "Rubik", fontSize: "16px" }}>
+                      {item.description}
+                    </td>
+                    <td style={{ fontFamily: "Rubik", fontSize: "16px" }}>
+                      {item.created_at.slice(0, 10)}
+                    </td>
+                    <td style={{ fontFamily: "Rubik", fontSize: "16px" }}>
+                      {item.status}
+                    </td>
                     <td>
                       <button
                         className="btn"
@@ -236,7 +288,9 @@ function App() {
               ) : (
                 <tr>
                   <td colSpan={7} className="no-data">
-                    Loading....
+                    {noMatch && !loading
+                      ? "No products to display!"
+                      : "Loading..."}
                   </td>
                 </tr>
               )}
