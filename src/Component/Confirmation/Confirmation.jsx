@@ -1,10 +1,11 @@
 import React from "react";
 import styleConfirmation from "./Confirmation.module.css";
 
+//component to ask for confirmation to delete the product
 const Confirmation = ({ config }) => {
   return (
     <div className={styleConfirmation.container}>
-      Are you sure you want to delete this product
+      Are you sure you want to delete this product?
       <div className={styleConfirmation["btn-container"]}>
         <button
           className={styleConfirmation.btn}

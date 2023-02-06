@@ -45,6 +45,11 @@ option {
   cursor: pointer;
 }
 
+.btn:disabled {
+  background-color: grey !important;
+  cursor: not-allowed;
+}
+
 textarea {
   width: 20rem;
   font-family: "Rubik";

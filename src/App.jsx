@@ -26,6 +26,7 @@ function App() {
   const [category, setCategory] = useState([]);
   const [status, setStatus] = useState([]);
 
+  //state to display message no match is found while searching
   const [noMatch, setNoMatch] = useState(false);
 
   //state to capture search input
@@ -164,7 +165,7 @@ function App() {
         toast.success("Product added successfully!");
       })
       .catch(error => {
-        toast.error(error.message);
+        toast.error("Unable to add product!");
       });
   };
 
@@ -184,6 +185,9 @@ function App() {
         fetchProductTable();
         handleModalClose();
         toast.success("Product edit successfully!");
+      })
+      .catch(err => {
+        toast.error("Unable to update the product!");
       });
   };
 
@@ -207,7 +211,7 @@ function App() {
 
   return (
     <>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <ToastContainer position="bottom-right" autoClose={1000} />
       <section className="main-container">
         <h1
           style={{
